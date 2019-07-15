@@ -41,6 +41,19 @@ export class ItemService {
     );
   }
 
+  /* 検索語を含むものを取得する */
+  searchItems(term: string): Observable<Item[]> {
+    if (!term.trim()) {
+      // 検索語がない場合、空の配列を返す
+      return of([]);
+    }
+    return this.http.get<Item[]>(`${this.itemsUrl}/?name=${term}`)
+    .pipe(
+      tap(_ => this.log(`"${term}" を検索しました`)),
+      catchError(this.handleError<Item[]>('searchItems', []))
+    );
+  }
+
   /** POST: サーバーに新しいものを登録する */
   addItem (item: Item): Observable<Item> {
     return this.http.post<Item>(this.itemsUrl, item, httpOptions)
