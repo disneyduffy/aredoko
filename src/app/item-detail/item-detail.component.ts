@@ -34,4 +34,8 @@ export class ItemDetailComponent implements OnInit {
     this.location.back();
   }
 
+  save(): void {
+    this.itemService.updateItem(this.item)
+      .subscribe(() => this.goBack());
+  }
 }
