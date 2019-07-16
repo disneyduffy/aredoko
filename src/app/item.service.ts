@@ -1,11 +1,11 @@
-import { Injectable }              from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of }          from 'rxjs';
-import { catchError, map, tap }    from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
-import { Item }                    from './item';
-import { MessageService }          from './message.service';
+import { Item } from './item';
+import { MessageService } from './message.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -55,7 +55,7 @@ export class ItemService {
   }
 
   /** POST: サーバーに新しいものを登録する */
-  addItem (item: Item): Observable<Item> {
+  addItem(item: Item): Observable<Item> {
     return this.http.post<Item>(this.itemsUrl, item, httpOptions)
     .pipe(
       tap((newItem: Item) => this.log(`id=${newItem.id} を登録しました`)),
@@ -64,7 +64,7 @@ export class ItemService {
   }
 
   /** DELETE: サーバーからものを削除 */
-  deleteItem (item: Item | number): Observable<Item> {
+  deleteItem(item: Item | number): Observable<Item> {
     const id = typeof item === 'number' ? item : item.id;
     const url = `${this.itemsUrl}/${id}`;
 
@@ -76,7 +76,7 @@ export class ItemService {
   }
 
   /** PUT: サーバー上でものを更新 */
-  updateItem (item: Item): Observable<any> {
+  updateItem(item: Item): Observable<any> {
     return this.http.put(this.itemsUrl, item, httpOptions)
     .pipe(
       tap(_ => this.log(`id=${item.id} を更新しました`)),
@@ -90,7 +90,7 @@ export class ItemService {
    * @param operation - 失敗した操作の名前
    * @param result - observableな結果として返す任意の値
    */
-  private handleError<T> (operation = 'operation', result?: T) {
+  private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
       // TODO: リモート上のロギング基盤にエラーを送信する
