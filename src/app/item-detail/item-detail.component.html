@@ -1,0 +1,20 @@
+<div *ngIf="item">
+  <h2>{{item.name}} 詳細</h2>
+  <div>
+    <label>名前:
+      <input [(ngModel)]="item.name" placeholder="名前を入力してください"/>
+    </label>
+  </div>
+  <div>
+    <label>置き場所:
+      <input [(ngModel)]="item.location" placeholder="置き場所を入力してください"/>
+    </label>
+  </div>
+  <div>
+    <label>メモ:
+      <input [(ngModel)]="item.memo" placeholder="メモを入力してください"/>
+    </label>
+  </div>
+  <button (click)="goBack()">戻る</button>
+  <button (click)="save()">保存</button>
+</div>
