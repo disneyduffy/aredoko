@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Item } from './item';
 import { MessageService } from './message.service';
+
+// Cloud Firestore
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -18,17 +21,25 @@ export class ItemService {
 
   private itemsUrl = 'api/items'; // Web APIのURL
 
+  /** Firestoreから取得したコレクションを格納 */
+  private itemsCollection: AngularFirestoreCollection<Item>;
+
   constructor(
     private http: HttpClient,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+    private afs: AngularFirestore
+  ) {
+    /** itemsコレクションを取得してitemsCollectionに代入 */
+    this.itemsCollection = afs.collection<Item>('items');
+  }
 
-  /** サーバーからものを取得する */
+  /** itemsコレクションを取得して返す */
   getItems(): Observable<Item[]> {
-    return this.http.get<Item[]>(this.itemsUrl)
-      .pipe(
-        tap(items => this.log('一覧を取得しました')),
-        catchError(this.handleError<Item[]>('getItems', []))
-      );
+    return this.itemsCollection.valueChanges()
+    .pipe(
+      tap(items => this.log('一覧を取得しました')),
+      catchError(this.handleError<Item[]>('getItems', []))
+    );
   }
 
   /** IDによりものを取得する。見つからなかった場合は404を返却する。 */
